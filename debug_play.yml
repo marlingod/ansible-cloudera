@@ -1,0 +1,9 @@
+---
+- 
+  hosts: all
+
+# Example that prints the loopback address and gateway for each host
+  tasks:
+    - name: Ansible jinja
+      debug:
+        msg:> "System {{ inventory_hostname }} has uuid {{ ansible_product_uuid }}"

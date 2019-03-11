@@ -1,0 +1,2 @@
+- name: Initialize master data disks
+  script: files/prepare_masternode_disks.sh

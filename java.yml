@@ -1,0 +1,8 @@
+---
+# cloudera playbook
+- name: Configure java
+  hosts: all
+  roles:
+    - java
+
+

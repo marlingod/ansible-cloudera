@@ -1,0 +1,6 @@
+krb5_realm: AD.SEC.CLOUDERA.COM
+ad_domain: "{{ krb5_realm.lower() }}"
+computer_ou: OU=computer,OU=yemalinOU,DC=ad,DC=sec,DC=cloudera,DC=com
+domain: gce.cloudera.com
+kdc: w2k8-1.ad.sec.cloudera.com
+admin_server: w2k8-1.ad.sec.cloudera.com

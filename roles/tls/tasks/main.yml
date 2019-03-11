@@ -1,0 +1,7 @@
+---
+- name: create a key and csr for node
+  shell: openssl req -new -newkey rsa:2048 -sha256 -keyout /opt/cloudera/security/warehouse/$(hostname -f).key -out /opt/cloudera/security/warehouse/$(hostname -f).csr -subj "/C=HI/CN=foo" -passin pass:cloudera -passout pass:cloudera
+  register: openkey
+
+- name: debug openssl
+  debug: msg ="{{ openkey.stdout }}"

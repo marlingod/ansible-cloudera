@@ -1,0 +1,28 @@
+---
+- name: Install pexpect
+  yum:
+    name: pexpect
+    state: installed
+
+- name: create directory
+  file:
+    path: "{{ sec_path }}"
+    state: directory
+    mode: 0755
+    owner: cloudera-scm
+    group: cloudera-scm
+
+- name : create the keystore
+  expect:
+    command: keytool -genkeypair -alias $(hostname -f) -keyalg RSA -keystore /opt/cloudera/security/pki/$(hostname -f).jks -keypasswd cloudera -storepasswd cloudera -keysize 2048 -dname "CN=$(hostname -f),OU=Engineering,O=Cloudera,L=Palo Alto,ST=California,C=US" -ext san=dns:$(hostname -f)
+    responses:
+      Question:
+        - response1
+        - response2
+  register: keystore
+
+- name: keyStore regiter result
+  debug: msg="{{ keystore.stdout }}"
+
+- name: create the csr 
+  shell: keytool -certreq -alias $(hostname -f) -keystore /opt/cloudera/security/pki/$(hostname -f).jks -file /opt/cloudera/security/pki/$(hostname -f).csr -ext san=dns:$(hostname -f)

@@ -1,0 +1,22 @@
+---
+# cloudera playbook
+- name: Configure java
+  hosts: all
+  roles:
+    - role: java
+      tags: 'java'
+
+- name: configure cm agents
+  hosts: all
+  roles:
+    - cm_agent
+
+- name: install rngd
+  hosts: all
+  roles:
+    - rngd
+
+- name: os configuration set=up
+  hosts: all
+  roles:
+    - os_config

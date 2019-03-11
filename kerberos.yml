@@ -1,0 +1,10 @@
+---
+- name: installing kerberos
+  hosts: all
+  roles: 
+   - kerberos
+
+- name: Install openldap client on scm
+  hosts: scm_server
+  roles:
+    - kerberos

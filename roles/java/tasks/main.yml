@@ -1,0 +1,82 @@
+---
+- name: Creates directories
+  file:
+    path: "{{ item }}"
+    state: directory
+  with_items: 
+      - "{{ java_download_folder }}"
+      - "{{ java_archive }}"
+      - "/usr/share/java"
+
+- name: download java RPM
+  get_url:
+    headers='Cookie:gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie'
+    dest="{{ oracle_java_dir_source }}/{{ oracle_java_rpm_filename }}"
+    url="{{ oracle_java_rpm_url }}"
+    validate_certs="{{ oracle_java_rpm_validate_certs }}"
+    timeout={{ oracle_java_download_timeout }}
+    force=no
+  register: oracle_java_task_rpm_download
+  until: oracle_java_task_rpm_download|succeeded
+  become: yes
+
+- name: install RPM
+  yum:
+    name="{{ oracle_java_dir_source }}/{{ oracle_java_rpm_filename }}"
+    state=present
+  when: not oracle_java_task_rpm_download|skipped
+  become: yes
+
+
+- stat: path="{{ tmp_dir }}/jce.policy-8.zip"
+  register: jce_zip_exists
+
+
+- name: Download JCE unlimited policy
+  get_url:
+    #url=http://download.oracle.com/otn-pub/java/jce/7/UnlimitedJCEPolicyJDK7.zip
+    url=http://download.oracle.com/otn-pub/java/jce/8/jce_policy-8.zip
+    dest="{{ tmp_dir }}/jce.policy-8.zip"
+    headers='Cookie:gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie'
+    validate_certs=no
+  when: jce_zip_exists.stat.exists == False
+
+
+- name: Unzip JCE unlimited policy files
+  unarchive:
+    src: "{{ tmp_dir }}/jce.policy-8.zip"
+    dest: "{{ tmp_dir }}"
+    remote_src: yes
+
+- stat: path="{{ tmp_dir }}/UnlimitedJCEPolicyJDK8"
+  register: jce_Unlimited
+
+- name: copy  the jce jar to the security
+  #command: mv {{ tmp_dir }}/UnlimitedJCEPolicyJDK8/*.jar {{ oracle_java_home }}/jre/lib/security/
+  copy:
+    remote_src=True
+    src="{{ item }}"
+    dest={{ oracle_java_home }}/jre/lib/security/
+  with_items:
+    - "{{ tmp_dir }}/UnlimitedJCEPolicyJDK8/US_export_policy.jar"
+    - "{{ tmp_dir }}/UnlimitedJCEPolicyJDK8/local_policy.jar"
+  #when: jce_Unlimited.stat.exists == False
+
+
+- name: Add java home path
+  blockinfile:
+    dest: /etc/profile
+    block: |
+      export JAVA_HOME=/usr/java/default
+      export PATH=$JAVA_HOME/bin:$PATH
+      regexp: "JAVA_HOME"
+    state: present
+
+- name: Cleanup tmp files
+  file:
+    path="{{ tmp_dir }}/{{ item }}"
+    state=absent
+  with_items:
+    - UnlimitedJCEPolicyJDK8
+    - jce.policy-8.zip
+  ignore_errors: True

@@ -1,0 +1,5 @@
+---
+- name: generate the key and csr
+  hosts: all
+  roles:
+    - tls

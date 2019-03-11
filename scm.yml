@@ -1,0 +1,11 @@
+
+---
+- name: Instal maria db and create cloudera tables
+  hosts: scm_server
+  roles:
+    - mariadb
+
+- name: Install Cloudera Manager Server
+  hosts: scm_server
+  roles:
+    - scm

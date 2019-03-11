@@ -1,0 +1,18 @@
+---
+
+# Flag for  air gapped installation, use a local folder instead.
+download_from_oracle: true
+
+mysql_download_folder: /tmp
+mysql_driver_version: 5.1.45
+
+mysql_driver_name: "mysql-connector-java-{{ mysql_driver_version}}"
+mysql_tarball_name: "{{mysql_driver_name}}.tar.gz"
+mysql_jar_src_name: "{{mysql_driver_name}}-bin.jar"
+mysql_jar_dst_name: "mysql-connector-java.jar"
+mysql_repo_uri: "https://dev.mysql.com/get/Downloads/Connector-J"
+mysql_tarball_url: "{{mysql_repo_uri}}/{{mysql_tarball_name}}"
+mysql_driver_src_path: "{{mysql_download_folder}}/{{mysql_driver_name}}/{{mysql_jar_src_name}}"
+mysql_driver_dst_path: "/usr/share/java/{{mysql_jar_dst_name}}"
+
+mysql_driver_local_repo: /tmp

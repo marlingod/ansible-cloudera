@@ -1,0 +1,5 @@
+yg-cluster-1.vpc.cloudera.com
+yg-cluster-2.vpc.cloudera.com
+yg-cluster-3.vpc.cloudera.com
+yg-cluster-4.vpc.cloudera.com
+yg-cluster-5.vpc.cloudera.com

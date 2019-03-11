@@ -1,0 +1,30 @@
+---
+# install cloudera repo and download cloudera agent and daemons
+
+- name: Download the cloudera manager repo
+  get_url:
+    url="{{ cloudera_repo_url }}"
+    dest="{{cloudera_repo_loc }}"
+  register: cloudera_repo_file
+  until: cloudera_repo_file|succeeded
+  become: yes      
+
+- name: download the cloudera agent and daemons on all nodes
+  yum:
+    name: "{{ item }}"
+    state: present
+    validate_certs: no
+  with_items:
+    - cloudera-manager-agent
+    - cloudera-manager-daemons   
+
+#- name: download the cloudera server on scm node
+  #yum:
+    #name: cloudera-manager-server
+    #state: present
+  #when: "'scm_servers in group_names'"
+
+- name: Install Mysql JDBC Connector
+  yum:
+    name: mysql-connector-java
+    state: present

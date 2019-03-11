@@ -1,0 +1,4 @@
+- name: Initializing the disk
+  script: files/prepare_datanode_disks.sh
+
+

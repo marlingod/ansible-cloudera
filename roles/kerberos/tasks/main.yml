@@ -1,0 +1,21 @@
+---
+- name: Install kerberos
+  yum:
+    state: installed
+    name: "{{ item }}" 
+  with_items:
+    - krb5-workstation
+    - krb5-libs
+
+- name: Install openldap on cloudera manager server
+  yum: 
+    state: installed
+    name: "{{ item }}" 
+  with_items:
+    - openldap-clients
+    - openldap
+    - compat-openldap
+    - openldap-servers
+    - openldap-servers-sql 
+    - openldap-devel
+

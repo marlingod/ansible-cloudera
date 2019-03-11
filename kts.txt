@@ -1,0 +1,2 @@
+yg-kts-1.vpc.cloudera.com
+yg-kts-2.vpc.cloudera.com
